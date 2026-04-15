@@ -182,23 +182,34 @@ function fetchTokenByCode(pId, pKey, shopId, code) {
  */
 function saveTokensToConfig(shopId, accessToken, refreshToken) {
   var lastCol   = CONFIG_P.getLastColumn();
+  var checkCols = Math.max(lastCol - 1, 1);
+  var row3vals  = CONFIG_P.getRange(3, 2, 1, checkCols).getValues()[0];
   var targetCol = -1;
 
-  if (lastCol >= 2) {
-    var shopIds = CONFIG_P.getRange(3, 2, 1, lastCol - 1).getValues()[0];
-    for (var i = 0; i < shopIds.length; i++) {
-      if (String(shopIds[i]) === String(shopId)) {
-        targetCol = i + 2;
+  // 既存ショップIDと一致する列を探す
+  for (var i = 0; i < row3vals.length; i++) {
+    if (String(row3vals[i]) === String(shopId)) {
+      targetCol = i + 2;
+      break;
+    }
+  }
+
+  // 見つからない場合、row3の最初の空きスロットを使う
+  if (targetCol === -1) {
+    for (var j = 0; j < row3vals.length; j++) {
+      if (!row3vals[j] || String(row3vals[j]).trim() === "") {
+        targetCol = j + 2;
         break;
       }
     }
   }
 
+  // 空きスロットもない場合、新しい列に追加
   if (targetCol === -1) {
-    targetCol = (lastCol < 2 ? 2 : lastCol + 1);
-    CONFIG_P.getRange(3, targetCol).setValue(shopId);
+    targetCol = lastCol + 1;
   }
 
+  CONFIG_P.getRange(3, targetCol).setValue(shopId);
   CONFIG_P.getRange(4, targetCol).setValue(accessToken);
   CONFIG_P.getRange(5, targetCol).setValue(refreshToken);
 }
@@ -294,18 +305,24 @@ function processOrderNotificationP(data, debugSheet) {
     }
   }
 
+  // pId・pKeyは常にB1・B2から取得（全ショップ共通）
+  var globalPId  = String(CONFIG_P.getRange("B1").getValue()).trim();
+  var globalPKey = String(CONFIG_P.getRange("B2").getValue()).trim();
+
   var lastCol    = CONFIG_P.getLastColumn();
-  var configVals = CONFIG_P.getRange(1, 2, 5, lastCol - 1).getValues();
+  var checkCols  = Math.max(lastCol - 1, 1);
+  // row3〜5のみ読む（ショップID・アクセストークン・リフレッシュトークン）
+  var shopRows   = CONFIG_P.getRange(3, 2, 3, checkCols).getValues();
   var shopConfig = null;
   var colIndex   = -1;
 
-  for (var i = 0; i < configVals[0].length; i++) {
-    if (String(configVals[2][i]) === shopId) {
+  for (var i = 0; i < shopRows[0].length; i++) {
+    if (String(shopRows[0][i]) === shopId) {
       shopConfig = {
-        pId:    configVals[0][i],
-        pKey:   configVals[1][i],
-        aToken: configVals[3][i],
-        rToken: configVals[4][i]
+        pId:    globalPId,
+        pKey:   globalPKey,
+        aToken: shopRows[1][i],
+        rToken: shopRows[2][i]
       };
       colIndex = i + 2;
       break;
