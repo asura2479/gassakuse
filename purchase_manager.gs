@@ -59,15 +59,15 @@ function showAuthUrl() {
   const path        = "/api/v2/shop/auth_partner";
   const timestamp   = Math.floor(Date.now() / 1000);
   const sign        = computeHmacSign(pId + path + timestamp, pKey);
-  const authUrl     = `https://partner.shopeemobile.com${path}`
-    + `?partner_id=${pId}&timestamp=${timestamp}&sign=${sign}`
-    + `&redirect=${encodeURIComponent(redirectUrl)}`;
+  const authUrl     = "https://partner.shopeemobile.com" + path
+    + "?partner_id=" + pId + "&timestamp=" + timestamp + "&sign=" + sign
+    + "&redirect=" + encodeURIComponent(redirectUrl);
 
   const html = HtmlService.createHtmlOutput(
-    `<style>body{font-family:sans-serif;padding:16px}</style>
-     <p>以下のURLをブラウザで開いて、ショップの認証を完了してください。</p>
-     <p><a href="${authUrl}" target="_blank" style="word-break:break-all">${authUrl}</a></p>
-     <p>認証後、このスプレッドシートにトークンが自動保存されます。</p>`
+    "<style>body{font-family:sans-serif;padding:16px}</style>"
+    + "<p>以下のURLをブラウザで開いて、ショップの認証を完了してください。</p>"
+    + "<p><a href='" + authUrl + "' target='_blank' style='word-break:break-all'>" + authUrl + "</a></p>"
+    + "<p>認証後、このスプレッドシートにトークンが自動保存されます。</p>"
   ).setWidth(620).setHeight(180);
 
   ui.showModalDialog(html, "Shopee 認証URL");
@@ -115,8 +115,8 @@ function fetchTokenByCode(pId, pKey, shopId, code) {
   const path      = "/api/v2/auth/token/get";
   const timestamp = Math.floor(Date.now() / 1000);
   const sign      = computeHmacSign(pId + path + timestamp, pKey);
-  const url       = `https://partner.shopeemobile.com${path}`
-    + `?partner_id=${pId}&timestamp=${timestamp}&sign=${sign}`;
+  const url       = "https://partner.shopeemobile.com" + path
+    + "?partner_id=" + pId + "&timestamp=" + timestamp + "&sign=" + sign;
 
   const payload = {
     code:       String(code),
@@ -193,7 +193,7 @@ function refreshAllTokens() {
     }
   }
 
-  ui.alert(`${count} ショップのトークンを更新しました。`);
+  ui.alert(count + " ショップのトークンを更新しました。");
 }
 
 // =============================================
@@ -318,10 +318,10 @@ function getOrderDetailP(pId, pKey, aToken, sId, orderSn) {
   const timestamp = Math.floor(Date.now() / 1000);
   const signBase  = pId + path + timestamp + aToken + sId;
   const sign      = computeHmacSign(signBase, pKey);
-  const url       = `https://partner.shopeemobile.com${path}`
-    + `?partner_id=${pId}&timestamp=${timestamp}&sign=${sign}`
-    + `&shop_id=${sId}&access_token=${aToken}`
-    + `&order_sn_list=${orderSn}&response_optional_fields=item_list`;
+  const url       = "https://partner.shopeemobile.com" + path
+    + "?partner_id=" + pId + "&timestamp=" + timestamp + "&sign=" + sign
+    + "&shop_id=" + sId + "&access_token=" + aToken
+    + "&order_sn_list=" + orderSn + "&response_optional_fields=item_list";
 
   const res = JSON.parse(
     UrlFetchApp.fetch(url, { muteHttpExceptions: true }).getContentText()
@@ -333,8 +333,8 @@ function refreshAccessTokenP(pId, pKey, sId, rToken) {
   const path      = "/api/v2/auth/access_token/get";
   const timestamp = Math.floor(Date.now() / 1000);
   const sign      = computeHmacSign(pId + path + timestamp, pKey);
-  const url       = `https://partner.shopeemobile.com${path}`
-    + `?partner_id=${pId}&timestamp=${timestamp}&sign=${sign}`;
+  const url       = "https://partner.shopeemobile.com" + path
+    + "?partner_id=" + pId + "&timestamp=" + timestamp + "&sign=" + sign;
 
   const payload = {
     refresh_token: String(rToken),
