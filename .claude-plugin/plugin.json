@@ -1,0 +1,11 @@
+{
+  "name": "short-script",
+  "version": "1.0.0",
+  "description": "アニメ解説系YouTubeショート/TikTok向けの台本を、競合動画の構造分析を踏まえて書くスキル",
+  "author": {
+    "name": "asura2479"
+  },
+  "repository": "https://github.com/asura2479/gassakuse",
+  "keywords": ["youtube", "shorts", "tiktok", "script", "anime", "japanese"],
+  "skills": ["./.claude/skills/short-script"]
+}
