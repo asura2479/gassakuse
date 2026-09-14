@@ -1,0 +1,17 @@
+{
+  "$schema": "https://claude.ai/schemas/marketplace.json",
+  "name": "gassakuse",
+  "description": "gassakuse のスキル配布用マーケットプレイス",
+  "owner": {
+    "name": "asura2479"
+  },
+  "plugins": [
+    {
+      "name": "short-script",
+      "description": "アニメ解説系YouTubeショート/TikTok向けの台本を、競合動画の構造分析を踏まえて書くスキル",
+      "version": "1.0.0",
+      "category": "productivity",
+      "source": "./"
+    }
+  ]
+}
